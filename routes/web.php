@@ -1,10 +1,10 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,25 +17,42 @@ use App\Http\Controllers\ArticleController;
 |
 */
 
-Route::get('/auth/signup', [AuthController::class,'signup']);
-Route::post('/auth/registr', [AuthController::class,'registr']);
-
-Route::resource('articles', ArticleController::class);
-
-
-Route::get('/', [MainController::class,'index']);
-Route::get('galery/{img}/{name}', function($img, $name) {
-    return view('main.gallery', ['img'=> $img, 'name'=> $name]);
+Route::get('/', function () {
+    return view('layout');
 });
+
+Route::resource('/article', ArticleController::class)->middleware('auth:sanctum');
+
+Route::controller(CommentController::class)->prefix('/comment')->middleware('auth:sanctum')->group(function () {
+    Route::post('', 'store')->name('comment.store');
+    Route::get('/{id}/edit', 'edit')->name('comment.edit');
+    Route::post('/{comment}/update', 'update')->name('comment.update');
+    Route::get('/{id}/delete', 'delete')->name('comment.delete');
+    Route::get('/index', 'index')->name('comment.index');
+    Route::get('/{comment}/accept', 'accept')->name('comment.accept');
+    Route::get('/{comment}/reject', 'reject')->name('comment.reject');
+}); 
+
+Route::get('/', [MainController::class, 'index']);
+
+Route::get('/auth/signup', [AuthController::class, 'signup']);
+Route::post('/auth/registr', [AuthController::class, 'registr']);
+Route::get('/auth/login', [AuthController::class, 'login'])->name('login');
+Route::post('/auth/authentication', [AuthController::class, 'authentication']);
+Route::get('/auth/logout', [AuthController::class, 'logout']);
 
 Route::get('/about', function () {
     return view('main/about');
 });
+
 Route::get('/contacts', function () {
     $data = [
-        'city'=> 'Moscow',
-        'street'=> 'Semenovskaya',
-        'house'=> 38,
+        'city'=>'Москва',
+        'street'=>'Moscow',
+        'home'=>35,
     ];
-    return view('main/contact', ['data'=> $data]);
+
+    return view('main/contacts', ['data'=>$data]);
 });
+
+Route::get('/gallery', [MainController::class, 'index']);

@@ -1,4 +1,7 @@
 @extends('layout')
 @section('content')
-    <h3>Серверная веб-разработка</h3>
+    <div class="container">
+        <p>Гр 231-322</p>
+        <p>Шкалдык Всеволод Андреевич</p>
+    </div> 
 @endsection
