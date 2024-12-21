@@ -26,7 +26,7 @@ class NewCommentMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address(env('MAIL_FROM_ADDRESS', 'egordem@list.ru'), env('MAIL_FROM_NAME', 'Новый комментарий')),
+            from: new Address(env('MAIL_FROM_ADDRESS', 'vs.shkaldyk@mail.ru'), env('MAIL_FROM_NAME', 'Новый комментарий')),
             subject: 'New Comment Mail',
         );
     }
